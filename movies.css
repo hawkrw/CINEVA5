@@ -1,0 +1,795 @@
+
+/* =========================================================
+   CINEVA PRO — PREMIUM MOVIES PAGE
+   Cinematic UI | Responsive | Numbered Pagination
+========================================================= */
+
+:root {
+    --movies-bg: #080812;
+    --movies-card: #11111e;
+    --movies-card-hover: #171528;
+    --movies-purple: #963fff;
+    --movies-purple-light: #b56aff;
+    --movies-text: #f7f5ff;
+    --movies-muted: #9995aa;
+    --movies-border: rgba(255, 255, 255, .085);
+    --movies-glow: rgba(150, 63, 255, .18);
+}
+
+/* =========================================================
+   01. PAGE FOUNDATION
+========================================================= */
+
+.movies-page {
+    position: relative;
+    isolation: isolate;
+    width: min(1440px, 92%);
+    min-height: 75vh;
+    margin: 0 auto;
+    padding: 145px 0 90px;
+    color: var(--movies-text);
+    font-family:;
+}
+
+.movies-page::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 90px;
+    left: -10%;
+    width: 65%;
+    height: 420px;
+    background: radial-gradient(
+        ellipse,
+        rgba(117, 48, 190, .09),
+        transparent 70%
+    );
+    pointer-events: none;
+}
+
+/* =========================================================
+   02. PAGE HEADING
+========================================================= */
+
+.movies-heading {
+    position: relative;
+    margin-bottom: 38px;
+}
+
+.movies-heading .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--movies-purple-light);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.movies-heading .eyebrow::before {
+    content: "";
+    width: 25px;
+    height: 2px;
+    border-radius: 5px;
+    background: linear-gradient(
+        90deg,
+        var(--movies-purple),
+        #ef315e
+    );
+}
+
+.movies-heading h1 {
+    margin: 13px 0 12px;
+    color: #fff;
+    font-size: clamp(34px, 5vw, 56px);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -2px;
+}
+
+.movies-heading p {
+    max-width: 650px;
+    margin: 0;
+    color: var(--movies-muted);
+    font-size: 14px;
+    line-height: 1.9;
+}
+
+/* =========================================================
+   03. SEARCH AND FILTER TOOLBAR
+========================================================= */
+
+.movies-toolbar {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 215px 190px;
+    gap: 14px;
+    margin: 35px 0 27px;
+}
+
+.movies-toolbar input,
+.movies-toolbar select {
+    width: 100%;
+    min-width: 0;
+    height: 53px;
+    padding: 0 17px;
+    border: 1px solid var(--movies-border);
+    border-radius: 12px;
+    outline: none;
+    background: linear-gradient(
+        145deg,
+        rgba(22, 22, 37, .96),
+        rgba(14, 14, 26, .98)
+    );
+    color: #f5f2ff;
+    font-family: "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    transition:
+        border-color .25s ease,
+        box-shadow .25s ease,
+        background .25s ease,
+        transform .25s ease;
+}
+
+.movies-toolbar input {
+    padding-left: 45px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='19' height='19' viewBox='0 0 24 24' fill='none' stroke='%239995aa' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: 16px center;
+}
+
+.movies-toolbar select {
+    cursor: pointer;
+}
+
+.movies-toolbar input::placeholder {
+    color: #777489;
+}
+
+.movies-toolbar input:focus,
+.movies-toolbar select:focus {
+    border-color: rgba(168, 85, 247, .8);
+    background-color: #171329;
+    box-shadow: 0 0 0 4px rgba(168, 85, 247, .1);
+}
+
+.movies-toolbar select option {
+    background: #11111e;
+    color: #fff;
+}
+
+/* =========================================================
+   04. RESULTS INFORMATION
+========================================================= */
+
+.movies-results {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 22px;
+    color: #aaa6bb;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .2px;
+}
+
+.movies-results::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #a855f7;
+    box-shadow: 0 0 10px rgba(168, 85, 247, .6);
+}
+
+/* =========================================================
+   05. MOVIE GRID
+========================================================= */
+
+#movies-grid.movie-grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 27px 20px;
+    align-items: stretch;
+    scroll-margin-top: 115px;
+}
+
+/* =========================================================
+   06. MOVIE CARDS
+   Supports both homepage-style and older movies.js markup.
+========================================================= */
+
+#movies-grid .movie-card {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, .075);
+    border-radius: 15px;
+    background: linear-gradient(
+        155deg,
+        #171727 0%,
+        #10101c 75%
+    );
+    color: #fff;
+    text-decoration: none;
+    box-shadow: 0 8px 26px rgba(0, 0, 0, .24);
+    transition:
+        transform .32s ease,
+        border-color .32s ease,
+        box-shadow .32s ease;
+}
+
+#movies-grid .movie-card:hover {
+    transform: translateY(-7px);
+    border-color: rgba(168, 85, 247, .58);
+    box-shadow:
+        0 17px 38px rgba(0, 0, 0, .38),
+        0 8px 30px rgba(116, 49, 190, .14);
+}
+
+/* Poster containers */
+
+#movies-grid .movie-poster,
+#movies-grid .movie-card-image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    overflow: hidden;
+    background: #171525;
+}
+
+#movies-grid .movie-poster img,
+#movies-grid .movie-card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition:
+        transform .65s cubic-bezier(.2, .7, .2, 1),
+        filter .4s ease;
+}
+
+#movies-grid .movie-card:hover .movie-poster img,
+#movies-grid .movie-card:hover .movie-card-image img {
+    transform: scale(1.065);
+    filter: brightness(.82);
+}
+
+/* Poster bottom shading */
+
+#movies-grid .movie-poster::after,
+#movies-grid .movie-card-image::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    inset: 45% 0 0;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(5, 5, 13, .48)
+    );
+    pointer-events: none;
+}
+
+/* Movie type */
+
+#movies-grid .movie-type,
+#movies-grid .movie-card-category {
+    position: absolute;
+    z-index: 3;
+    top: 11px;
+    left: 11px;
+    max-width: calc(100% - 22px);
+    overflow: hidden;
+    padding: 6px 9px;
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 6px;
+    background: rgba(8, 8, 18, .76);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .7px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+}
+
+/* Rating */
+
+#movies-grid .movie-rating,
+#movies-grid .movie-card-rating {
+    position: absolute;
+    z-index: 3;
+    top: 11px;
+    right: 11px;
+    padding: 6px 9px;
+    border: 1px solid rgba(255, 211, 106, .16);
+    border-radius: 6px;
+    background: rgba(8, 8, 18, .8);
+    color: #ffd36a;
+    font-size: 10px;
+    font-weight: 800;
+    backdrop-filter: blur(10px);
+}
+
+/* Translator badge */
+
+#movies-grid .movie-translator-badge {
+    position: absolute;
+    z-index: 3;
+    right: 10px;
+    bottom: 11px;
+    left: 10px;
+    width: fit-content;
+    max-width: calc(100% - 20px);
+    overflow: hidden;
+    padding: 6px 9px;
+    border: 1px solid rgba(190, 130, 255, .22);
+    border-radius: 6px;
+    background: rgba(12, 9, 24, .82);
+    color: #e1caff;
+    font-size: 10px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    backdrop-filter: blur(10px);
+}
+
+/* Hover overlay */
+
+#movies-grid .movie-overlay {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 5, 14, .38);
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+#movies-grid .movie-card:hover .movie-overlay {
+    opacity: 1;
+}
+
+#movies-grid .play-icon {
+    display: grid;
+    width: 55px;
+    height: 55px;
+    place-items: center;
+    border: 1px solid rgba(255, 255, 255, .4);
+    border-radius: 50%;
+    background: linear-gradient(
+        135deg,
+        #b45cff,
+        #7134dc
+    );
+    color: #fff;
+    font-size: 17px;
+    box-shadow: 0 5px 28px rgba(137, 65, 255, .42);
+    transform: scale(.8);
+    transition: transform .3s ease;
+}
+
+#movies-grid .movie-card:hover .play-icon {
+    transform: scale(1);
+}
+
+/* Movie information */
+
+#movies-grid .movie-info,
+#movies-grid .movie-card-info {
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    min-width: 0;
+    padding: 14px 13px 15px;
+    background: linear-gradient(
+        180deg,
+        rgba(20, 20, 34, .98),
+        #11111e
+    );
+}
+
+#movies-grid .movie-info h3,
+#movies-grid .movie-card-info h3 {
+    overflow: hidden;
+    margin: 0 0 9px;
+    color: #f7f4ff;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.5;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color .25s ease;
+}
+
+#movies-grid .movie-card:hover .movie-info h3,
+#movies-grid .movie-card:hover .movie-card-info h3 {
+    color: #c89aff;
+}
+
+#movies-grid .movie-meta,
+#movies-grid .movie-card-info p {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 7px;
+    margin: 0;
+    color: #9692a9;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+#movies-grid .movie-meta span + span::before {
+    content: "•";
+    margin-right: 7px;
+    color: #8650c7;
+}
+
+/* =========================================================
+   07. LOADING AND EMPTY STATES
+========================================================= */
+
+#movies-grid .movies-loading,
+#movies-grid .movies-empty {
+    grid-column: 1 / -1;
+    display: flex;
+    min-height: 250px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+    padding: 35px 20px;
+    border: 1px solid var(--movies-border);
+    border-radius: 15px;
+    background: linear-gradient(
+        145deg,
+        #151522,
+        #10101b
+    );
+    color: var(--movies-muted);
+    text-align: center;
+}
+
+#movies-grid .movies-empty i {
+    color: var(--movies-purple-light);
+    font-size: 32px;
+}
+
+#movies-grid .movies-empty h3 {
+    margin: 0;
+    color: #fff;
+    font-size: 19px;
+}
+
+#movies-grid .movies-empty p {
+    margin: 0;
+    font-size: 13px;
+}
+
+.movies-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255, 255, 255, .1);
+    border-top-color: var(--movies-purple-light);
+    border-right-color: #ef315e;
+    border-radius: 50%;
+    animation: cinevaMovieSpin .8s linear infinite;
+}
+
+@keyframes cinevaMovieSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================================================
+   08. NUMBERED PAGINATION
+========================================================= */
+
+.movies-pagination {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin: 48px 0 15px;
+}
+
+.pagination-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.page-btn {
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, .09);
+    border-radius: 11px;
+    background: linear-gradient(
+        145deg,
+        #191827,
+        #11111e
+    );
+    color: #d2cde0;
+    font-family: "Inter", sans-serif;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition:
+        transform .25s ease,
+        border-color .25s ease,
+        background .25s ease,
+        box-shadow .25s ease;
+}
+
+.page-btn:hover:not(:disabled) {
+    transform: translateY(-3px);
+    border-color: var(--movies-purple);
+    background: #211632;
+    color: #fff;
+    box-shadow: 0 6px 18px rgba(168, 85, 247, .13);
+}
+
+.page-btn.active {
+    border-color: transparent;
+    background: linear-gradient(
+        135deg,
+        #b45cff,
+        #7134dc
+    );
+    color: #fff;
+    box-shadow:
+        0 5px 18px rgba(142, 68, 235, .3),
+        inset 0 1px 0 rgba(255, 255, 255, .2);
+}
+
+.page-btn:disabled {
+    opacity: .28;
+    cursor: not-allowed;
+}
+
+.page-ellipsis {
+    padding: 0 3px;
+    color: #777489;
+    font-size: 14px;
+}
+
+.pagination-info {
+    margin: 0;
+    color: #858196;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .3px;
+}
+
+/* =========================================================
+   09. PREMIUM FOOTER WATERMARK
+   Uses the existing homepage footer markup.
+========================================================= */
+
+.main-footer {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background:
+        radial-gradient(
+            ellipse at 50% 45%,
+            rgba(83, 34, 137, .075),
+            transparent 65%
+        ),
+        #070710;
+}
+
+/* Subtle, dimensional background text */
+
+.main-footer::before {
+    content: "IT HAWK RW";
+    position: absolute;
+    z-index: 0;
+    top: 49%;
+    left: 50%;
+    width: max-content;
+    max-width: 95%;
+    color: rgba(168, 85, 247, .035);
+    font-family: "Inter", sans-serif;
+    font-size: clamp(34px, 5.5vw, 72px);
+    font-weight: 900;
+    letter-spacing: clamp(5px, 1.3vw, 17px);
+    text-align: center;
+    white-space: nowrap;
+    pointer-events: none;
+    transform:
+        translate(-50%, -50%)
+        perspective(700px)
+        rotateX(17deg)
+        rotateY(-4deg);
+    text-shadow:
+        1px 1px 0 rgba(168, 85, 247, .045),
+        2px 2px 0 rgba(168, 85, 247, .035),
+        3px 3px 0 rgba(168, 85, 247, .025),
+        0 8px 22px rgba(0, 0, 0, .35);
+}
+
+/* Keep footer content above watermark */
+
+.main-footer .footer-container,
+.main-footer .footer-bottom {
+    position: relative;
+    z-index: 1;
+}
+
+/* =========================================================
+   10. RESPONSIVE DESIGN
+========================================================= */
+
+@media (max-width: 1200px) {
+    #movies-grid.movie-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 23px 17px;
+    }
+}
+
+@media (max-width: 900px) {
+    .movies-page {
+        padding-top: 125px;
+    }
+
+    .movies-toolbar {
+        grid-template-columns: minmax(0, 1fr) 190px;
+    }
+
+    .movies-toolbar input {
+        grid-column: 1 / -1;
+    }
+
+    #movies-grid.movie-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 20px 14px;
+    }
+}
+
+@media (max-width: 600px) {
+    .movies-page {
+        width: 92%;
+        padding-top: 112px;
+        padding-bottom: 65px;
+    }
+
+    .movies-heading {
+        margin-bottom: 28px;
+    }
+
+    .movies-heading h1 {
+        font-size: clamp(32px, 9vw, 42px);
+        letter-spacing: -1.4px;
+    }
+
+    .movies-heading p {
+        font-size: 13px;
+    }
+
+    .movies-toolbar {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        margin: 26px 0 22px;
+    }
+
+    .movies-toolbar input {
+        grid-column: auto;
+    }
+
+    .movies-toolbar input,
+    .movies-toolbar select {
+        height: 49px;
+    }
+
+    #movies-grid.movie-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 17px 11px;
+    }
+
+    #movies-grid .movie-info,
+    #movies-grid .movie-card-info {
+        padding: 11px 9px 12px;
+    }
+
+    #movies-grid .movie-info h3,
+    #movies-grid .movie-card-info h3 {
+        font-size: 11px;
+    }
+
+    #movies-grid .movie-meta,
+    #movies-grid .movie-card-info p {
+        font-size: 9px;
+    }
+
+    #movies-grid .movie-type,
+    #movies-grid .movie-card-category {
+        top: 8px;
+        left: 8px;
+        padding: 5px 7px;
+        font-size: 8px;
+    }
+
+    #movies-grid .movie-rating,
+    #movies-grid .movie-card-rating {
+        top: 8px;
+        right: 8px;
+        padding: 5px 7px;
+        font-size: 9px;
+    }
+
+    #movies-grid .movie-translator-badge {
+        right: 7px;
+        bottom: 8px;
+        left: 7px;
+        font-size: 9px;
+    }
+
+    .movies-pagination {
+        margin-top: 35px;
+    }
+
+    .pagination-inner {
+        gap: 6px;
+    }
+
+    .page-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 9px;
+        font-size: 11px;
+    }
+
+    .main-footer::before {
+        font-size: 29px;
+        letter-spacing: 4px;
+    }
+}
+
+@media (max-width: 360px) {
+    #movies-grid.movie-grid {
+        gap: 13px 9px;
+    }
+
+    .page-btn {
+        width: 33px;
+        height: 33px;
+    }
+}
+
+/* =========================================================
+   11. ACCESSIBILITY
+========================================================= */
+
+@media (hover: none) {
+    #movies-grid .movie-overlay {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #movies-grid .movie-card,
+    #movies-grid .movie-poster img,
+    #movies-grid .movie-card-image img,
+    #movies-grid .movie-overlay,
+    #movies-grid .play-icon,
+    .page-btn {
+        transition: none !important;
+    }
+
+    .movies-spinner {
+        animation: none;
+    }
+}
